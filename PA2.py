@@ -7,14 +7,16 @@ akun = {"username": [ "rizq", "fathul","marliani"],
 admin1 = {"username": ["admin"],
         "password": ["1"]}
 
-baju = {"nama" : [],
-        "harga" : []}
+baju = {"nama" : ["kaos","kemeja"],
+        "harga" : [100000,200000]}
 
 nama_user = []
 
+# Memasukkan username ke variable nama_user
 for i in akun["username"]:
     nama_user.append(i)
 
+# Class Node
 class Node:
     def __init__(self, data):
         self.data = data
@@ -33,6 +35,7 @@ class Queue:
             self.last.next = Node(data)
             self.last.next.prev=self.last
             self.last = self.last.next
+
     def dequeue(self):
         if self.head is None:
             return None
@@ -61,7 +64,9 @@ class Queue:
         else:
             return False
 
-#QUICK SORT
+link = Queue()
+
+# QUICK SORT
 def partition(arr, low, high):
 	i = (low-1)		 
 	pivot = arr[high]	 
@@ -80,7 +85,7 @@ def quickSort(arr, low, high):
 		quickSort(arr, low, pi-1)
 		quickSort(arr, pi+1, high)
 
-#Fibonaci search
+# Fibonaci search
 def searching(isi, x, n):
     fibonaci2 = 0 
     fibonaci1 = 1 
@@ -107,6 +112,7 @@ def searching(isi, x, n):
         return n-1
     return -1
 
+# Mencari nama user
 def search():
     n = len(nama_user)
     x = input("Masukan Yang ingin anda cari : ")
@@ -118,6 +124,19 @@ def search():
         print(x,"Nama Tidak ada di list")
         t = input("Enter ...")
 
+# Mencari Nama Baju
+def search_baju():
+    n = len(baju.get("nama"))
+    x = input("Masukan Yang ingin anda cari : ")
+    isi = searching(baju.get("nama"), x, n)
+    if isi >= 0:
+        print("Ditemukan di index ke :",isi)
+        t = input("Enter ...")
+    else:
+        print(x,"Nama Tidak ada di list")
+        t = input("Enter ...")
+
+# Fungsi untuk membuat angka menjadi format Rupiah
 def rp(uang):
     y = str(uang)
     if len(y) <= 3:
@@ -127,12 +146,13 @@ def rp(uang):
         q = y[:-3]
         return rp(q) + '.' + p
 
+# Melihat data baju
 def lihat():    
     if len(baju.get("nama"))<1 :
         print("Data Masih Kosong")
         t = input("Enter Untuk Melanjutkan...")
     else:
-        print("--- Toko Baju ---")
+        print("--- MRF STORE ---")
         nb = baju.get("nama")
         hb = baju.get("harga")
         for i in range(len(baju.get("nama"))):
@@ -140,28 +160,36 @@ def lihat():
         print("\n")
         t = input("Enter Untuk Melanjutkan...")    
 
+# Belanja
 def belanja():    
     try :
-        os.system('cls')
-        print("|=============================|")
-        print("|         TOKO BAJU           |")
-        print("|=============================|")    
-        nb = baju.get("nama")
-        hb = baju.get("harga")
-        for i in range(len(baju.get("nama"))):
-            print(f"--> {nb[i]}\t\t{rp(hb[i])}")            
-        print("\n")
-        beli = input("Pilih sesuai Nama diatas : ")
-        idx = baju.get("nama").index(beli)
-        # jumlah_harga = baju["harga"][idx]
-        print(f"Anda Membeli {nb[idx]} Harga = {rp(hb[idx])}")
-        print("\n")
-        print("Terima Kasih Telah Berbelanja")
-        t = input("Enter Untuk Melanjutkan...")
+        if len(baju.get("nama"))<1 :
+            print("Data Masih Kosong")
+            t = input("Enter Untuk Melanjutkan...")  
+        else:
+            os.system('cls')
+            print("|=============================|")
+            print("|         MRF STORE           |")
+            print("|=============================|")    
+            nb = baju.get("nama")
+            hb = baju.get("harga")
+            for i in range(len(baju.get("nama"))):
+                print(f"-->  {nb[i]}\t\t{rp(hb[i])}")            
+            print("\n")
+            beli = input("Pilih sesuai Nama diatas : ")
+            idx = baju.get("nama").index(beli)
+            # jumlah_harga = baju["harga"][idx]
+            print(f"Anda Membeli {nb[idx]} Harga = {rp(hb[idx])}")
+            print("\n")
+            print("Terima Kasih Telah Berbelanja")
+            del baju["nama"][idx]
+            del baju["harga"][idx]
+            t = input("Enter Untuk Melanjutkan...")
     except:
         print("Masukkan Sesuai nama baju yang ingin di beli")
         t = input("Enter Untuk Melanjutkan...")
 
+# Menambah Data Baju
 def tambah():
     nama = input('Masukan Nama Baju : ')  
     while True:
@@ -175,6 +203,7 @@ def tambah():
     print("Berhasil Menambahkan")
     t = input("Enter ...")
 
+# Menghapus Data Baju
 def hapus():  
     try:
         if len(baju.get("nama"))<1 :
@@ -192,6 +221,7 @@ def hapus():
         print("Masukkan nama baju yang ingin dihapus")
         t = input("Enter ...")
 
+# Mengubah Data Baju
 def ubah():
     try:
         if len(baju.get("nama"))<1 :
@@ -218,7 +248,7 @@ def ubah():
         print("Masukkan nama baju yang ingin diubah")
         t = input("Enter ...")
 
-
+# Menu Login
 def menu1():
     print("|=============================|")
     print("|            MENU             |")
@@ -229,6 +259,7 @@ def menu1():
     print("|   4. Keluar                 |")
     print("|=============================|")
     
+# Login User    
 def loguser():
     try:
         username = input("masukkan Username : ")
@@ -237,11 +268,14 @@ def loguser():
         if username == akun.get("username")[daftar] and password == akun.get("password")[daftar]:
             print("Berhasil Login")
             menu_user()
-        else : print("Gagal Login")
+        else : 
+            print("Gagal Login")
+            t = input("Enter untuk Kembali...")
     except ValueError:
             print("Maaf Username yang anda masukkan tidak tersedia")
             t = input("Enter untuk Kembali...")
 
+# Login Admin
 def logadmin():
     try:
         username = input("masukkan Username : ")
@@ -250,11 +284,14 @@ def logadmin():
         if username == admin1.get("username")[daftar] and password == admin1.get("password")[daftar]:
             print("Welcome admin")
             menu_admin()
-        else : print("Gagal Login")            
+        else : 
+            print("Gagal Login")            
+            t = input("Enter untuk Kembali...")
     except ValueError:
             print("Maaf Username yang anda masukkan tidak tersedia")
             t = input("Enter untuk Kembali...")
 
+# Daftar User
 def register_user():
     while True:
         us = input("Masukkan username : ")
@@ -270,6 +307,7 @@ def register_user():
             nama_user.append(us)
             break
     print("Berhasil Register")
+    t = input("Enter untuk Kembali...")
 
 def menu_user():
     while True:
@@ -279,19 +317,24 @@ def menu_user():
         print("|=============================|")
         print("|   1. Lihat Baju             |")
         print("|   2. Belanja                |")
-        print("|   3. Kembali                |")
-        print("|   4. Keluar                 |")
+        print("|   3. Cari Baju              |")
+        print("|   4. Kembali                |")
+        print("|   5. Keluar                 |")
         print("|=============================|")
         pilih = (input("Pilih : "))
         if pilih == "1":
             lihat()
         elif pilih == "2":
             belanja()
-        elif pilih == "3":
-            kembali()
+        elif pilih =="3":
+            search_baju()
         elif pilih == "4":
+            kembali()
+        elif pilih == "5":
             exit()
-        else:print("Pilih Sesuai Angka DI Menu")
+        else:
+            print("Pilih Sesuai Angka DI Menu")
+            t = input("Enter untuk Kembali...")
 
 def menu_admin():
     while True:
@@ -347,7 +390,9 @@ def menu_admin():
                 print("="*20)
                 t = input("Enter ...")
             
-            else:print("Pilih Sesuai Angka Diatas")
+            else:
+                print("Pilih Sesuai Angka Diatas")                          
+                t = input("Enter untuk Kembali...")
         elif pilih == "6":
             search()
         elif pilih == "7":
@@ -355,6 +400,7 @@ def menu_admin():
         elif pilih == "8":
             exit()
 
+# Kembali ke menu
 def kembali_admin():
     print("\n")
     input("Tekan Enter untuk kembali ke Menu...")
