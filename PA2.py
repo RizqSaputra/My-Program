@@ -1,3 +1,4 @@
+import queue
 import pwinput
 import os
 
@@ -17,54 +18,72 @@ for i in akun["username"]:
     nama_user.append(i)
 
 # Class Node
-class Node:
+class Node: # Function to initialise the node object
     def __init__(self, data):
-        self.data = data
-        self.next = None
+        self.data = data # Assign 
+        self.next = None # Initialize next as null
+        self.prev = None # Initialize prev as null
 
-#Queue
-class Queue:
+# Stack class contains a Node object
+class Stack:
+    # Function to initialize head
     def __init__(self):
         self.head = None
-        self.last= None
-    def enqueue(self, data):
-        if self.last is None:
-            self.head =Node(data)
-            self.last =self.head
-        else:
-            self.last.next = Node(data)
-            self.last.next.prev=self.last
-            self.last = self.last.next
 
-    def dequeue(self):
+# Function to add an element data in the stack
+    def push(self, data):
+        if self.head is None:
+            self.head = Node(data)
+        else:
+            new_node = Node(data)
+            self.head.prev = new_node
+            new_node.next = self.head
+            new_node.prev = None
+            self.head = new_node
+
+# Function to pop top element and return the element from the stack
+    def pop(self):
         if self.head is None:
             return None
-        else:
-            temp= self.head.data
-            self.head = self.head.next
+        elif self.head.next is None:
+            temp = self.head.data
+            self.head = None
             return temp
-
-    def printqueue(self):
-        print("~"*20)
-        temp=self.head
-        while temp is not None:
-            print(temp.data,end="->")
-            print("")
-            temp=temp.next
-
-    def first(self):
-        if self.head.data is None:
-            return None
         else:
-            return self.head.data
-        
+            temp = self.head.data
+            self.head = self.head.next
+            self.head.prev = None
+            return temp 
+
+# Function to return top element in the stack
+    def top(self):
+        return self.head.data
+
+        # Function to return the size of the stack
+    def size(self):
+        temp = self.head
+        count = 0
+        while temp is not None:
+            count = count + 1
+            temp = temp.next
+        return count
+
+        # Function to check if the stack is empty or not
     def isEmpty(self):
         if self.head is None:
             return True
         else:
             return False
 
-link = Queue()
+    # Function to print the stack
+    def printstack(self):
+        print("stack elements are:")
+        temp = self.head
+        while temp is not None:
+            print(temp.data, end ="->")
+            temp = temp.next
+
+stack = Stack()
 
 # QUICK SORT
 def partition(arr, low, high):
@@ -148,17 +167,34 @@ def rp(uang):
 
 # Melihat data baju
 def lihat():    
-    if len(baju.get("nama"))<1 :
-        print("Data Masih Kosong")
-        t = input("Enter Untuk Melanjutkan...")
-    else:
-        print("--- MRF STORE ---")
-        nb = baju.get("nama")
-        hb = baju.get("harga")
-        for i in range(len(baju.get("nama"))):
-            print(f"--> {nb[i]}\t\t{rp(hb[i])}")            
-        print("\n")
-        t = input("Enter Untuk Melanjutkan...")    
+    print("=====================")
+    print("1. Lihat Data")
+    print("2. Lihat Jumlah Data")
+    print("=====================")
+    pilih = input("Pilih : ")
+    if pilih == "1":
+        if len(baju.get("nama"))<1 :
+            print("Data Masih Kosong")
+            t = input("Enter Untuk Melanjutkan...")
+        else:
+            print("--- MRF STORE ---")
+            nb = baju.get("nama")
+            hb = baju.get("harga")
+            for i in range(len(baju.get("nama"))):
+                print(f"--> {nb[i]}\t\t{rp(hb[i])}")            
+            print("\n")
+            t = input("Enter Untuk Melanjutkan...")    
+    if pilih == "2":
+        pass
+        a = baju.get("nama")        
+        for i in range(len(a)):
+            s = a[i]
+            stack.push(s)
+        print("Jumlah Data :",stack.size()) 
+        stack.printstack()
+        t = input("Enter Untuk Melanjutkan...")            
+        for i in range(len(a)):
+            stack.pop()            
 
 # Belanja
 def belanja():    
@@ -210,7 +246,13 @@ def hapus():
             print("Data Masih Kosong")
             t = input("Enter Untuk Melanjutkan...")  
         else:
-            lihat()
+            print("--- MRF STORE ---")
+            nb = baju.get("nama")
+            hb = baju.get("harga")
+            for i in range(len(baju.get("nama"))):
+                print(f"--> {nb[i]}\t\t{rp(hb[i])}")            
+            print("\n")
+            t = input("Enter Untuk Melanjutkan...")  
             nama = (input("Masukkan Nama baju yang ingin dihapus : "))
             idx = baju.get("nama").index(nama)    
             del baju["nama"][idx]
@@ -228,7 +270,13 @@ def ubah():
             print("Data Masih Kosong")
             t = input("Enter Untuk Melanjutkan...")  
         else:
-            lihat()
+            print("--- MRF STORE ---")
+            nb = baju.get("nama")
+            hb = baju.get("harga")
+            for i in range(len(baju.get("nama"))):
+                print(f"--> {nb[i]}\t\t{rp(hb[i])}")            
+            print("\n")
+            t = input("Enter Untuk Melanjutkan...")  
             nama = (input("Masukkan Nama baju yang ingin diubah : "))
             idx = baju.get("nama").index(nama)    
             del baju["nama"][idx]
