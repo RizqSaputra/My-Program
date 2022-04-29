@@ -1,4 +1,3 @@
-import queue
 import pwinput
 import os
 
@@ -18,11 +17,85 @@ for i in akun["username"]:
     nama_user.append(i)
 
 # Class Node
-class Node: # Function to initialise the node object
-    def __init__(self, data):
-        self.data = data # Assign 
-        self.next = None # Initialize next as null
-        self.prev = None # Initialize prev as null
+class Node(object): 
+    def __init__(self, data=None, next_node=None):
+        self.data = data
+        self.next_node = next_node   
+    # Mengambil data dari node
+    def get_data(self):
+        return self.data
+   
+    # Mengambil node berikutnya
+    def get_next(self):
+        return self.next_node
+   
+    # Menentukan node berikutnya
+    def set_next(self, new_next):
+        self.next_node = new_next
+
+class LinkedList(object):
+    def __init__(self, head=None):
+        self.head = head
+   
+    # Menambah node baru
+    def insert(self, data):
+        # Inisialisasi node baru
+        new_node = Node(data)
+        # Menunjuk node berikutnya dari node baru ke node yang ditunjuk oleh HEAD
+        new_node.set_next(self.head)
+        # HEAD menunjuk ke node baru
+        self.head = new_node
+ 
+    # Menghitung panjang list
+    def size(self):
+        # Membuat pointer baru menunjuk ke node yang ditunjuk oleh HEAD
+        current = self.head
+        count = 0
+        # Perulangan untuk menghitung node
+        while current:
+            count += 1
+            current = current.get_next()
+        return count
+ 
+    # Mencari sebuah data pada list
+    def search(self, data):
+        # Membuat pointer baru menunjuk ke node yang ditunjuk oleh HEAD
+        current = self.head
+        found = False
+        # Perulangan mencari node yang dicari
+        while current and found is False:
+            if current.get_data() == data:
+                found = True
+            else:
+                current = current.get_next()               
+        return found
+ 
+    # Menghapus node
+    def delete(self, data):
+        current = self.head
+        previous = None
+        found = False
+        while current and found is False:
+            if current.get_data() == data:
+                found = True
+            else:
+                previous = current
+                current = current.get_next()
+        if current is None:
+            raise ValueError("Data not in list")
+        if previous is None:
+            self.head = current.get_next()
+        else:
+            previous.set_next(current.get_next())
+ 
+    # Menampilkan isi dari list
+    def showData(self):
+        os.system('cls')
+        print ("Tampilkan list data:")        
+        current_node = self.head 
+        while current_node is not None:
+            print (current_node.data,"->"),                               
+            current_node = current_node.next_node
 
 # Stack class contains a Node object
 class Stack:
@@ -84,7 +157,7 @@ class Stack:
             temp = temp.next
 
 stack = Stack()
-
+llist = LinkedList()
 # QUICK SORT
 def partition(arr, low, high):
 	i = (low-1)		 
@@ -95,7 +168,6 @@ def partition(arr, low, high):
 			arr[i], arr[j] = arr[j], arr[i]
 	arr[i+1], arr[high] = arr[high], arr[i+1]
 	return (i+1)
-
 def quickSort(arr, low, high):
 	if len(arr) == 1:
 		return arr
@@ -129,7 +201,7 @@ def searching(isi, x, n):
             return i
     if(fibonaci1 and isi[n-1] == x):
         return n-1
-    return -1
+    return -1    
 
 # Mencari nama user
 def search():
@@ -145,15 +217,19 @@ def search():
 
 # Mencari Nama Baju
 def search_baju():
-    n = len(baju.get("nama"))
-    x = input("Masukan Yang ingin anda cari : ")
-    isi = searching(baju.get("nama"), x, n)
-    if isi >= 0:
-        print("Ditemukan di index ke :",isi)
-        t = input("Enter ...")
+    if len(baju.get("nama"))<1 :
+        print("Data Masih Kosong")
+        t = input("Enter Untuk Melanjutkan...")
     else:
-        print(x,"Nama Tidak ada di list")
-        t = input("Enter ...")
+        n = len(baju.get("nama"))
+        x = input("Masukan Yang ingin anda cari : ")
+        isi = searching(baju.get("nama"), x, n)
+        if isi >= 0:
+            print("Ditemukan di index ke :",isi)
+            t = input("Enter ...")
+        else:
+            print(x,"Nama Tidak ada di list")
+            t = input("Enter ...")
 
 # Fungsi untuk membuat angka menjadi format Rupiah
 def rp(uang):
@@ -166,11 +242,12 @@ def rp(uang):
         return rp(q) + '.' + p
 
 # Melihat data baju
-def lihat():    
-    print("=====================")
-    print("1. Lihat Data")
-    print("2. Lihat Jumlah Data")
-    print("=====================")
+def lihat_admin():    
+    print("================================")
+    print("1. Lihat Barang")
+    print("2. Lihat Tumpukan Barang (Stack)")
+    print("3. Linked List barang Terjual")
+    print("================================")
     pilih = input("Pilih : ")
     if pilih == "1":
         if len(baju.get("nama"))<1 :
@@ -195,7 +272,49 @@ def lihat():
         t = input("Enter Untuk Melanjutkan...")            
         for i in range(len(a)):
             stack.pop()            
-
+    if pilih == "3":
+        try :
+            while True:
+                print("=== Linked List barang Terjual ===")
+                print("1. Linked List")
+                print("2. Hapus Linked List")
+                print("3. Kembali")
+                pilih = input("Pilih : ")
+                if pilih == "1":
+                    print("Panjang dari Linked List adalah: "+str(llist.size()))
+                    llist.showData()
+                    t = input("Enter Untuk Melanjutkan...")
+                elif pilih == "2":
+                    llist.showData()
+                    obj = str(input("Masukan data yang ingin anda dihapus: "))
+                    llist.delete(obj)
+                    print("Berhasil Terhapus")
+                    t = input("Enter Untuk Melanjutkan...")
+                elif pilih == "3":
+                    kembali_admin()
+                else:
+                    print("Pilih Sesuai Menu")
+                    t = input("Enter Untuk Melanjutkan...")
+        except :
+            print("Gagal Menghapus")
+            t = input("Enter Untuk Melanjutkan...")
+    else:
+        print("Pilih Sesuai Menu")
+        t = input("Enter Untuk Melanjutkan...")
+            
+def lihat_user():        
+    if len(baju.get("nama"))<1 :
+        print("Data Masih Kosong")
+        t = input("Enter Untuk Melanjutkan...")
+    else:
+        print("--- MRF STORE ---")
+        nb = baju.get("nama")
+        hb = baju.get("harga")
+        for i in range(len(baju.get("nama"))):
+            print(f"--> {nb[i]}\t\t{rp(hb[i])}")            
+        print("\n")
+        t = input("Enter Untuk Melanjutkan...")    
+    
 # Belanja
 def belanja():    
     try :
@@ -214,7 +333,8 @@ def belanja():
             print("\n")
             beli = input("Pilih sesuai Nama diatas : ")
             idx = baju.get("nama").index(beli)
-            # jumlah_harga = baju["harga"][idx]
+            harga = hb[idx]
+            llist.insert(f"{beli} {harga}")
             print(f"Anda Membeli {nb[idx]} Harga = {rp(hb[idx])}")
             print("\n")
             print("Terima Kasih Telah Berbelanja")
@@ -254,7 +374,7 @@ def hapus():
             print("\n")
             t = input("Enter Untuk Melanjutkan...")  
             nama = (input("Masukkan Nama baju yang ingin dihapus : "))
-            idx = baju.get("nama").index(nama)    
+            idx = baju.get("nama").index(nama)                
             del baju["nama"][idx]
             del baju["harga"][idx]
             print("Barang berhasil dihapus")
@@ -371,7 +491,7 @@ def menu_user():
         print("|=============================|")
         pilih = (input("Pilih : "))
         if pilih == "1":
-            lihat()
+            lihat_user()
         elif pilih == "2":
             belanja()
         elif pilih =="3":
@@ -403,7 +523,7 @@ def menu_admin():
         if pilih == "1":
             tambah()
         elif pilih == "2":
-            lihat()
+            lihat_admin()
         elif pilih == "3":
             hapus()
         elif pilih == "4":
