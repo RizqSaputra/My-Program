@@ -20,7 +20,10 @@ for i in akun["username"]:
 class Node(object): 
     def __init__(self, data=None, next_node=None):
         self.data = data
-        self.next_node = next_node   
+        self.next_node = next_node           
+        self.data = data # Assign 
+        self.next = None # Initialize next as null
+        self.prev = None
     # Mengambil data dari node
     def get_data(self):
         return self.data
@@ -261,8 +264,7 @@ def lihat_admin():
                 print(f"--> {nb[i]}\t\t{rp(hb[i])}")            
             print("\n")
             t = input("Enter Untuk Melanjutkan...")    
-    if pilih == "2":
-        pass
+    if pilih == "2":        
         a = baju.get("nama")        
         for i in range(len(a)):
             s = a[i]
@@ -298,8 +300,7 @@ def lihat_admin():
         except :
             print("Gagal Menghapus")
             t = input("Enter Untuk Melanjutkan...")
-    else:
-        print("Pilih Sesuai Menu")
+    else:        
         t = input("Enter Untuk Melanjutkan...")
             
 def lihat_user():        
